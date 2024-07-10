@@ -20,30 +20,30 @@ Solidity is an object-oriented programming language for writing smart contracts.
 
 Here, you will find the code examples and exercises from various lessons:
 
-1. Master Solidity Programming Language Course
-2. Solidity Introduction | Why Solidity Is Better Than Other Smart Contract Languages
-3. Remix IDE Tutorial | Complete Overview Of Online Solidity Code Editor
-4. Hotel Booking Solidity Smart Contract | Tutorial Of Real Solidity Smart Contract
-5. Write Your First Solidity Smart Contract
-6. NFT Counter Solidity Smart Contract | Increment & Decrement NFT Count
-7. Solidity Data Types | Data Types in Solidity Smart Contracts
-8. Solidity Function | What are functions in Solidity Like, Function, Modifiers, Pure
-9. State Variables In Solidity | Reading, and Writing to a State Variable
-10. Local Variables In Solidity
-11. Global Variables In Solidity
-12. View In Solidity
-13. Pure In Solidity
-14. Event Tickets Smart Contract in Solidity
-15. Constant In Solidity
-16. If, Else In Solidity
-17. While Loop In Solidity Programming Language
-18. Do While Loop In Solidity Programming Language
-19. For Loop In Solidity Programming Language
-20. Require Error Handler In Solidity | Require Statement
-21. Assert Error Handler In Solidity | Assert Statement
-22. Revert Error Handler In Solidity | Revert Statement
-23. Modifier In Solidity | How to create Modifiers In Solidity
-24. Solidity Constructor | How To Use Solidity Constructor Function
+1. Master Solidity Programming Language Course ✔
+2. Solidity Introduction | Why Solidity Is Better Than Other Smart Contract Languages ✔
+3. Remix IDE Tutorial | Complete Overview Of Online Solidity Code Editor ✔
+4. Hotel Booking Solidity Smart Contract | Tutorial Of Real Solidity Smart Contract ✔
+5. Write Your First Solidity Smart Contract ✔
+6. NFT Counter Solidity Smart Contract | Increment & Decrement NFT Count ✔
+7. Solidity Data Types | Data Types in Solidity Smart Contracts ✔
+8. Solidity Function | What are functions in Solidity Like, Function, Modifiers, Pure ✔
+9. State Variables In Solidity | Reading, and Writing to a State Variable ✔
+10. Local Variables In Solidity ✔
+11. Global Variables In Solidity ✔
+12. View In Solidity ✔
+13. Pure In Solidity ✔
+14. Event Tickets Smart Contract in Solidity ✔
+15. Constant In Solidity ✔
+16. If, Else In Solidity ✔
+17. While Loop In Solidity Programming Language ✔
+18. Do While Loop In Solidity Programming Language ✔
+19. For Loop In Solidity Programming Language ✔
+20. Require Error Handler In Solidity | Require Statement ✔
+21. Assert Error Handler In Solidity | Assert Statement ✔
+22. Revert Error Handler In Solidity | Revert Statement ✔
+23. Modifier In Solidity | How to create Modifiers In Solidity ✔
+24. Solidity Constructor | How To Use Solidity Constructor Function ✔
 
 ## Resources
 
