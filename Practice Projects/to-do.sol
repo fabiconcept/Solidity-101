@@ -65,6 +65,10 @@ contract TodoContract {
         unfinishedTodos--;
     }
 
+    function getTodoIds() public view returns (uint[] memory) {
+        return todoIds;
+    }
+
     function getAllTodo() public view returns (Todo[] memory){
         Todo[] memory result = new Todo[](todoIds.length);
         for(uint i; i < todoIds.length; i++) {
