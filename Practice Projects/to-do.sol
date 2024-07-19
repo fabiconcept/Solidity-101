@@ -72,7 +72,8 @@ contract TodoContract {
     function getAllTodo() public view returns (Todo[] memory){
         Todo[] memory result = new Todo[](todoIds.length);
         for(uint i; i < todoIds.length; i++) {
-            Todo storage getTodo = todoList[i];
+            uint id = todoIds[i];
+            Todo storage getTodo = todoList[id];
             result[i] = getTodo;
         }
 
@@ -82,7 +83,8 @@ contract TodoContract {
     function getCompletedTodo() public view returns (Todo[] memory){
         Todo[] memory result = new Todo[](todoIds.length);
         for(uint i; i < todoIds.length; i++) {
-            Todo storage getTodo = todoList[i];
+            uint id = todoIds[i];
+            Todo storage getTodo = todoList[id];
 
             if(getTodo.completed) {
                 result[i] = getTodo;
@@ -96,7 +98,8 @@ contract TodoContract {
     function getUncompletedTodo() public view returns (Todo[] memory){
         Todo[] memory result = new Todo[](todoIds.length);
         for(uint i; i < todoIds.length; i++) {
-            Todo storage getTodo = todoList[i];
+            uint id = todoIds[i];
+            Todo storage getTodo = todoList[id];
 
             if(!getTodo.completed) {
                 result[i] = getTodo;
