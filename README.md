@@ -44,6 +44,7 @@ Here, you will find the code examples and exercises from various lessons:
 22. Revert Error Handler In Solidity | Revert Statement ✔
 23. Modifier In Solidity | How to create Modifiers In Solidity ✔
 24. Solidity Constructor | How To Use Solidity Constructor Function ✔
+25. Solidity Mapping | How To Use Solidity Mapping, Add, Update & Remove Items ✔
 
 ## Resources
 
