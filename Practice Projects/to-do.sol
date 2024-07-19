@@ -42,7 +42,9 @@ contract TodoContract {
 
         for (uint256 i = 0; i < todoIds.length; i++) {
             if (todoIds[i] == _taskId) {
-                // todoIds[i] = 
+                todoIds[i] = todoIds[todoIds.length - 1];
+                todoIds.pop();
+                break;
             }
         }
         
@@ -55,11 +57,49 @@ contract TodoContract {
         return true;        
     }
 
-    function completedTask (uint _taskId) public onlyExistingTask(_taskId) {
+    function completeTask (uint _taskId) public onlyExistingTask(_taskId) {
         Todo storage getTodo = todoList[_taskId];
         getTodo.completed = true;
 
         completedTodos++;
         unfinishedTodos--;
+    }
+
+    function getAllTodo() public view returns (Todo[] memory){
+        Todo[] memory result = new Todo[](todoIds.length);
+        for(uint i; i < todoIds.length; i++) {
+            Todo storage getTodo = todoList[i];
+            result[i] = getTodo;
+        }
+
+        return result;
+    }
+    
+    function getCompletedTodo() public view returns (Todo[] memory){
+        Todo[] memory result = new Todo[](todoIds.length);
+        for(uint i; i < todoIds.length; i++) {
+            Todo storage getTodo = todoList[i];
+
+            if(getTodo.completed) {
+                result[i] = getTodo;
+            }
+            continue;
+        }
+
+        return result;
+    }
+
+    function getUncompletedTodo() public view returns (Todo[] memory){
+        Todo[] memory result = new Todo[](todoIds.length);
+        for(uint i; i < todoIds.length; i++) {
+            Todo storage getTodo = todoList[i];
+
+            if(!getTodo.completed) {
+                result[i] = getTodo;
+            }
+            continue;
+        }
+
+        return result;
     }
 }
