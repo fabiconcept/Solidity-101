@@ -48,6 +48,7 @@ Here, you will find the code examples and exercises from various lessons:
 26. Solidity Array ✔
 27. Solidity Array Manipulation ✔
 28. Solidity Enum ✔
+29. Solidity Struct ✔
 
 ## Resources
 
