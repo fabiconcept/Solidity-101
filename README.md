@@ -45,6 +45,9 @@ Here, you will find the code examples and exercises from various lessons:
 23. Modifier In Solidity | How to create Modifiers In Solidity ✔
 24. Solidity Constructor | How To Use Solidity Constructor Function ✔
 25. Solidity Mapping | How To Use Solidity Mapping, Add, Update & Remove Items ✔
+26. Solidity Array ✔
+27. Solidity Array Manipulation ✔
+28. Solidity Enum ✔
 
 ## Resources
 
