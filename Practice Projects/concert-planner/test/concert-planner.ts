@@ -44,25 +44,17 @@ describe("Concert Planner", function () {
 
     describe("Tickets",  function () {
         it("Should allow another wallet (not admin) to buy tickets", async function () {
-
             const [, user] = await ethers.getSigners();
-
             await concertPlanner.connect(user).purchaseTicket("test user", 12);
             const visitorsCount = await concertPlanner.visitorCount();
             expect(visitorsCount).to.be.equal(1);
         });
         
         it("Should burn users tickets",  async function () {
-            
-            const [, user] = await ethers.getSigners();
-
-            await concertPlanner.connect(user).purchaseTicket("test user", 12);
-            const visitorsCount = Number((await concertPlanner.visitorCount()).toString());
-            
             await concertPlanner.burnTicket(12);
+            const visitorsCount = Number((await concertPlanner.visitorCount()).toString());
             expect(visitorsCount).to.be.equal(0);
         })
-
     })
 
 })

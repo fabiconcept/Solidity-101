@@ -106,8 +106,10 @@ contract ConcertPlanner {
         uint256[] memory newStack = new uint256[](_stack.length - 1);
         uint256 newIndex = 0;
 
+        if (_stack.length == 1) return newStack;
+
         for (uint256 i = 0; i < _stack.length; i++) {
-            if (i != _item) {
+            if (_stack[i] != _item) {
                 newStack[newIndex] = _stack[i];
                 newIndex++;
             }
