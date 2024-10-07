@@ -54,7 +54,7 @@ describe("Concert Planner", function () {
     })
 
     describe("Meet and Greet", function () {
-        describe("Should allow user with ticket book meet and greet", async () => {
+        describe("Shouldn't allow user with ticket book meet and greet because no artist has been invited", async () => {
             const [, user] = await ethers.getSigners();
             await concertPlanner.connect(user).purchaseTicket("test user", 12);
             await expect(concertPlanner.bookMeetGreet(12, 0)).to.be.reverted
