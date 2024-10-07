@@ -87,8 +87,8 @@ contract ConcertPlanner {
     }
 
     modifier onlyAvailableSit(uint256 _sitNumber) {
-        bool sitIsAvailable;
-        require(_sitNumber <= maxTickets, "Sit number is not available");
+        bool sitIsAvailable = true;
+        require(_sitNumber <= maxTickets, "Sit number is not available 01");
 
         for (uint i = 0; i < takenSits.length; i++) {
             if (takenSits[i] == _sitNumber) {

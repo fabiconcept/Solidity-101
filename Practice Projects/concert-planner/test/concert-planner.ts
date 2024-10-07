@@ -3,26 +3,30 @@ import {
 } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 import { expect } from "chai";
 import hre, { ethers } from "hardhat";
+import { ConcertPlanner, ConcertPlanner__factory } from "../typechain-types";
+import { Signer } from "ethers";
 
 describe("Concert Planner", function () {
-    const deployConnectPlanner = async () => {
-        const concertName = "Test Concert";
+    let concertName: string;
+    let concertPlanner: ConcertPlanner;
+    let owner: any;
+    let otherAccount: any;
+    before(async () => {
+        concertName = "Test Concert";
 
-        const [owner, otherAccount] = await hre.ethers.getSigners();
+        [owner, otherAccount] = await hre.ethers.getSigners();
         const ConnectPlanner = await hre.ethers.getContractFactory("ConcertPlanner");
-        const concertPlanner = await ConnectPlanner.deploy(concertName);
+        concertPlanner = await ConnectPlanner.deploy(concertName);
 
         return { owner, concertPlanner, concertName, otherAccount };
-    }
+    })
 
     describe("Deployment",  function () {
         it("Should deploy the contract wih the right Concert Name", async function () {
-            const { concertName, concertPlanner } = await loadFixture(deployConnectPlanner);
             expect(await concertPlanner.concertName()).to.equal(concertName);
         });
 
         it("Should set the Concert Date to 5 days after today",  async function () {
-            const { concertPlanner } = await loadFixture(deployConnectPlanner);
 
             const blockTimestamp = (await ethers.provider.getBlock("latest"))!.timestamp;
             const concertDate = await concertPlanner.concertDate();
@@ -34,8 +38,31 @@ describe("Concert Planner", function () {
         });
 
         it("Should set the right owner",  async function () {
-            const { owner, concertPlanner } = await loadFixture(deployConnectPlanner);
             expect(await concertPlanner.owner()).to.equal(owner.address);
         });       
+    });
+
+    describe("Tickets",  function () {
+        it("Should allow another wallet (not admin) to buy tickets", async function () {
+
+            const [, user] = await ethers.getSigners();
+
+            await concertPlanner.connect(user).purchaseTicket("test user", 12);
+            const visitorsCount = await concertPlanner.visitorCount();
+            expect(visitorsCount).to.be.equal(1);
+        });
+        
+        it("Should burn users tickets",  async function () {
+            
+            const [, user] = await ethers.getSigners();
+
+            await concertPlanner.connect(user).purchaseTicket("test user", 12);
+            const visitorsCount = Number((await concertPlanner.visitorCount()).toString());
+            
+            await concertPlanner.burnTicket(12);
+            expect(visitorsCount).to.be.equal(0);
+        })
+
     })
+
 })
