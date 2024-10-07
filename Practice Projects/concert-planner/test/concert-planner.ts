@@ -1,10 +1,6 @@
-import {
-    loadFixture,
-} from "@nomicfoundation/hardhat-toolbox/network-helpers";
 import { expect } from "chai";
 import hre, { ethers } from "hardhat";
-import { ConcertPlanner, ConcertPlanner__factory } from "../typechain-types";
-import { Signer } from "ethers";
+import { ConcertPlanner } from "../typechain-types";
 
 describe("Concert Planner", function () {
     let concertName: string;
@@ -54,6 +50,14 @@ describe("Concert Planner", function () {
             await concertPlanner.burnTicket(12);
             const visitorsCount = Number((await concertPlanner.visitorCount()).toString());
             expect(visitorsCount).to.be.equal(0);
+        })
+    })
+
+    describe("Meet and Greet", function () {
+        describe("Should allow user with ticket book meet and greet", async () => {
+            const [, user] = await ethers.getSigners();
+            await concertPlanner.connect(user).purchaseTicket("test user", 12);
+            await expect(concertPlanner.bookMeetGreet(12, 0)).to.be.reverted
         })
     })
 
