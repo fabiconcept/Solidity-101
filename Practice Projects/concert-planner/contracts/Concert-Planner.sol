@@ -13,12 +13,12 @@ contract ConcertPlanner {
         string name;
         uint256 sitNumber;
         bool hasMeetGreet;
-        string meetGreetArtist;
+        uint256 meetGreetArtist;
     }
 
     struct MeetGreet {
         uint256 sitNumber;
-        string artistId;
+        uint256 artistId;
     }
 
     uint256 public artistCount;
@@ -30,16 +30,13 @@ contract ConcertPlanner {
     uint256 public maxMeetGreet;
     uint256 public maxMeetGreetPerArtist;
 
-    mapping(string => Artist) public artists;
+    mapping(uint256 => Artist) public artists;
     mapping(uint256 => Visitor) public visitors;
     mapping(uint256 => MeetGreet) public meetGreets;
 
     uint256[] public artistIds;
     uint256[] public visitorIds;
     uint256[] public takenSits;
-
-    string[] public artistNames;
-    string[] public visitorNames;
 
     string public concertName;
     uint256 public concertDate;
@@ -74,7 +71,7 @@ contract ConcertPlanner {
         _;
     }
 
-    modifier onlyValidArtist(string calldata _artistId) {
+    modifier onlyValidArtist(uint256 _artistId) {
         Artist storage artist = artists[_artistId];
         require(bytes(artist.name).length > 0, "Invalid artist");
         _;
@@ -120,11 +117,11 @@ contract ConcertPlanner {
         return newStack;
     }
 
-    function purchaseTicket(
-        string calldata _name,
-        uint256 _preferredSit
-    ) public onlyBeforeConcertStart onlyAvailableSit(_preferredSit) {
+    function purchaseTicket(string calldata _name, uint256 _preferredSit) public onlyBeforeConcertStart onlyAvailableSit(_preferredSit) {
         Visitor storage newVisitor = visitors[_preferredSit];
+
+        require(bytes(newVisitor.name).length  == 0, "Visitor already has a ticket");
+
         takenSits.push(_preferredSit);
         visitorCount++;
 
@@ -139,11 +136,14 @@ contract ConcertPlanner {
         delete visitors[_sitNumber];
     }
 
-    function bookMeetGreet (uint256 _sitNumber, string calldata _artistId) public onlyBeforeConcertStart onlyValidVistor(_sitNumber) onlyValidArtist(_artistId) {
+    function bookMeetGreet (uint256 _sitNumber, uint256 _artistId) public onlyBeforeConcertStart onlyValidVistor(_sitNumber) onlyValidArtist(_artistId) {
         require(meetGreetCount < maxMeetGreet, "Sorry, no more space for meet and greet reservation.");
         Visitor storage visitor = visitors[_sitNumber];
         MeetGreet storage newMeetGreet = meetGreets[_sitNumber];
         Artist storage artist = artists[_artistId];
+
+        require(artist.meetGreetCount < maxMeetGreetPerArtist, "Artist has reached the maximum number of meet and greet reservations");
+
 
         visitor.hasMeetGreet = true;
         visitor.meetGreetArtist = _artistId;
@@ -157,14 +157,73 @@ contract ConcertPlanner {
 
     function cancelMeetGreet (uint256 _sitNumber) public onlyBeforeConcertStart onlyValidVistor(_sitNumber) onlyAdmin {
         Visitor storage visitor = visitors[_sitNumber];
-        string memory _artistId = visitor.meetGreetArtist;
+        uint256 _artistId = visitor.meetGreetArtist;
 
         Artist storage artist = artists[_artistId];
 
         visitor.hasMeetGreet = false;
-        delete meetGreets[_sitNumber];
+        visitor.meetGreetArtist = 0;
+        artist.meetGreetCount--;
 
-        artist.meetGreetCount++;
+        delete meetGreets[_sitNumber];
         meetGreetCount--;
+    }
+
+    function addArtist (uint256 _artistId, string calldata _artistName) public onlyAdmin onlyBeforeConcertStart {
+        Artist storage newArtist = artists[_artistId];
+
+        require(bytes(newArtist.name).length  == 0, "Artist already exists.");
+
+        newArtist.name =  _artistName;
+        newArtist.meetGreetCount = 0;
+
+        artistIds.push(_artistId);
+        artistCount++;
+    }
+
+    function removeArtist  (uint256 _artistId) public onlyAdmin onlyBeforeConcertStart onlyValidArtist(_artistId) {
+        Artist storage artist = artists[_artistId];
+
+        require(artist.meetGreetCount == 0,  "Artist has meet and greet reservations.");
+
+        uint256[] memory _artistIds = artistIds;
+        artistIds = removeItem(_artistIds, _artistId);
+
+        delete artists[_artistId];
+        artistCount--;
+    }
+
+    function meetGreetArtist (uint256 _sitNumber) public onlyHasMeetGreet(_sitNumber) onlyValidVistor(_sitNumber) {
+        Visitor storage visitor = visitors[_sitNumber];
+        uint256 _artistId = visitor.meetGreetArtist;
+        Artist storage artist = artists[_artistId];
+
+        visitor.hasMeetGreet = false;
+        artist.meetGreetCount--;
+        meetGreetCount--;
+    }
+
+    function  getArtistName (uint256 _artistId) public view returns (string memory) {
+        return artists[_artistId].name;
+    }
+
+    function  getArtistMeetGreetCount (uint256 _artistId) public view returns (uint256){
+        return artists[_artistId].meetGreetCount;
+    }
+
+    function  seeAllArtist () public view returns (string[] memory) {
+        string[] memory outputList = new string[](artistIds.length);
+        for (uint256 i = 0; i < artistIds.length; i++) {
+            outputList[i] = artists[artistIds[i]].name;
+        }
+        return outputList;
+    }
+
+    function seeAllVisitors() public view returns (string[] memory) {
+        string[] memory outputList = new string[](visitorIds.length);
+        for (uint256 i = 0; i < visitorIds.length; i++) {
+            outputList[i] = visitors[visitorIds[i]].name;
+        }
+        return outputList;
     }
 }
