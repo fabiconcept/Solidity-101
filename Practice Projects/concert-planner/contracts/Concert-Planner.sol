@@ -99,8 +99,7 @@ contract ConcertPlanner {
         require(sitIsAvailable, "Sit number is not available");
         _;
     }
-
-    
+ 
     function removeItem(uint256[] memory _stack, uint256 _item) public pure returns (uint256[] memory) {
         require(_stack.length > 0, "Array is empty");
 
