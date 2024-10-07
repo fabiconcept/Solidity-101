@@ -13,6 +13,7 @@ contract ConcertPlanner {
         string name;
         uint256 sitNumber;
         bool hasMeetGreet;
+        string meetGreetArtist;
     }
 
     struct MeetGreet {
@@ -31,7 +32,7 @@ contract ConcertPlanner {
 
     mapping(string => Artist) public artists;
     mapping(uint256 => Visitor) public visitors;
-    mapping(uint256 => MeetGreet) public meetGreet;
+    mapping(uint256 => MeetGreet) public meetGreets;
 
     uint256[] public artistIds;
     uint256[] public visitorIds;
@@ -138,11 +139,32 @@ contract ConcertPlanner {
         delete visitors[_sitNumber];
     }
 
-    function bookMeetGreet (uint256 _sitNumber, string calldata _artistName) public onlyBeforeConcertStart onlyValidVistor(_sitNumber) {
+    function bookMeetGreet (uint256 _sitNumber, string calldata _artistId) public onlyBeforeConcertStart onlyValidVistor(_sitNumber) onlyValidArtist(_artistId) {
         require(meetGreetCount < maxMeetGreet, "Sorry, no more space for meet and greet reservation.");
         Visitor storage visitor = visitors[_sitNumber];
+        MeetGreet storage newMeetGreet = meetGreets[_sitNumber];
+        Artist storage artist = artists[_artistId];
 
         visitor.hasMeetGreet = true;
+        visitor.meetGreetArtist = _artistId;
 
+        artist.meetGreetCount++;
+
+        newMeetGreet.artistId = _artistId;
+        newMeetGreet.sitNumber = _sitNumber;
+        meetGreetCount++;
+    }
+
+    function cancelMeetGreet (uint256 _sitNumber) public onlyBeforeConcertStart onlyValidVistor(_sitNumber) onlyAdmin {
+        Visitor storage visitor = visitors[_sitNumber];
+        string memory _artistId = visitor.meetGreetArtist;
+
+        Artist storage artist = artists[_artistId];
+
+        visitor.hasMeetGreet = false;
+        delete meetGreets[_sitNumber];
+
+        artist.meetGreetCount++;
+        meetGreetCount--;
     }
 }
