@@ -51,14 +51,48 @@ describe("Concert Planner", function () {
             const visitorsCount = Number((await concertPlanner.visitorCount()).toString());
             expect(visitorsCount).to.be.equal(0);
         })
-    })
+    });
 
-    describe("Meet and Greet", function () {
-        describe("Shouldn't allow user with ticket book meet and greet because no artist has been invited", async () => {
+    describe("Revert Meet and Greet", function () {
+        it("Shouldn't allow user with ticket book meet and greet because no artist has been invited", async () => {
             const [, user] = await ethers.getSigners();
             await concertPlanner.connect(user).purchaseTicket("test user", 12);
             await expect(concertPlanner.bookMeetGreet(12, 0)).to.be.reverted
-        })
-    })
+        });
 
+        it("Shouldn't allow user to cancel Meet and Greet booking because no artist has been invited", async () => {
+            await expect(concertPlanner.cancelMeetGreet(12)).to.be.reverted
+        })
+    });
+
+    describe("Artist", function () { 
+        it("Should allow admin to add an artist", async function () {
+            const artistName = "test artist";
+            await concertPlanner.addArtist(0, artistName);
+            const artistCount = await concertPlanner.artistCount();
+            expect(artistCount).to.be.equal(1);
+        });
+
+        it("Should not allow admin to add an existing artist", async function () {
+            const artistName = "test artist";
+            await expect(concertPlanner.addArtist(0, artistName)).to.be.reverted;
+        });
+
+        it("Shouldn't allow user to add artist", async function () {
+            const [, user] = await ethers.getSigners();
+            await expect(concertPlanner.connect(user).addArtist(1, "test artist")).to.be.reverted
+        });
+        
+        it("Shouldn't allow user to remove artist", async function () {
+            const [, user] = await ethers.getSigners();
+            await expect(concertPlanner.connect(user).removeArtist(0)).to.be.reverted
+        });
+        
+        it("Should allow admin to remove artist", async function () {
+            await concertPlanner.removeArtist(0);
+            const artistCount = await concertPlanner.artistCount();
+            expect(artistCount).to.be.equal(0);
+        });
+        
+    });
 })
