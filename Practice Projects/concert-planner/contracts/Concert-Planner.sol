@@ -156,7 +156,7 @@ contract ConcertPlanner {
         meetGreetCount++;
     }
 
-    function cancelMeetGreet (uint256 _sitNumber) public onlyBeforeConcertStart onlyValidVistor(_sitNumber) onlyAdmin {
+    function cancelMeetGreet (uint256 _sitNumber) public onlyBeforeConcertStart onlyValidVistor(_sitNumber) {
         Visitor storage visitor = visitors[_sitNumber];
         uint256 _artistId = visitor.meetGreetArtist;
 
@@ -194,7 +194,7 @@ contract ConcertPlanner {
         artistCount--;
     }
 
-    function meetGreetArtist (uint256 _sitNumber) public onlyHasMeetGreet(_sitNumber) onlyValidVistor(_sitNumber) {
+    function meetGreetArtist (uint256 _sitNumber) public onlyHasMeetGreet(_sitNumber) onlyAfterConcertStart onlyValidVistor(_sitNumber) {
         Visitor storage visitor = visitors[_sitNumber];
         uint256 _artistId = visitor.meetGreetArtist;
         Artist storage artist = artists[_artistId];

@@ -1,3 +1,6 @@
+const {
+    time,
+  } = require("@nomicfoundation/hardhat-toolbox/network-helpers");
 import { expect } from "chai";
 import hre, { ethers } from "hardhat";
 import { ConcertPlanner } from "../typechain-types";
@@ -7,6 +10,7 @@ describe("Concert Planner", function () {
     let concertPlanner: ConcertPlanner;
     let owner: any;
     let otherAccount: any;
+    const concertStartDate = new Date().getTime() + (5 * 24 * 60 * 60 * 1000) + (60000);
     before(async () => {
         concertName = "Test Concert";
 
@@ -78,12 +82,12 @@ describe("Concert Planner", function () {
             await expect(concertPlanner.addArtist(0, artistName)).to.be.reverted;
         });
 
-        it("Shouldn't allow user to add artist", async function () {
+        it("Should not allow user to add artist", async function () {
             const [, user] = await ethers.getSigners();
             await expect(concertPlanner.connect(user).addArtist(1, "test artist")).to.be.reverted
         });
         
-        it("Shouldn't allow user to remove artist", async function () {
+        it("Should not allow user to remove artist", async function () {
             const [, user] = await ethers.getSigners();
             await expect(concertPlanner.connect(user).removeArtist(0)).to.be.reverted
         });
@@ -95,4 +99,48 @@ describe("Concert Planner", function () {
         });
         
     });
+
+    describe("Meet and Greet",  function () {
+        it("Should allow user book meet and greet with existing artist", async () => {
+            const [, user] = await ethers.getSigners();
+            await concertPlanner.addArtist(1, "test artist");
+            await concertPlanner.connect(user).purchaseTicket("test user with mG", 2);
+            await concertPlanner.connect(user).bookMeetGreet(2, 1);
+            const meetGreetCount = await concertPlanner.meetGreetCount();
+            expect(meetGreetCount).to.be.equal(1);
+        });
+        
+        it("Should allow user with booked meet and greet to cancel it", async () => {
+            const [, user] = await ethers.getSigners();
+            await concertPlanner.connect(user).cancelMeetGreet(2);
+            const meetGreetCount = await concertPlanner.meetGreetCount();
+            expect(meetGreetCount).to.be.equal(0);
+        });
+        
+        it("Should not allow user without  booked meet and greet to cancel it", async () => {
+            const [, user] = await ethers.getSigners();
+            await expect(concertPlanner.connect(user).cancelMeetGreet(2)).to.be.reverted
+        });
+
+        it("Should not allow user to book meet and greet with an unexisiting  artist", async () => {
+            const [, user] = await ethers.getSigners();
+            await expect(concertPlanner.connect(user).bookMeetGreet(2, 2)).to.be.reverted
+        });
+        
+        it("Should not allow user with meet and greet meet artist until concert is started", async () => {
+            const [, user] = await ethers.getSigners();
+            await expect(concertPlanner.connect(user).meetGreetArtist(12)).to.be.reverted
+        })
+        
+        it("Should allow user with meet and greet meet artist because concert is started", async () => {
+            const [, user] = await ethers.getSigners();
+            const date = concertStartDate;
+            await time.increaseTo(date);
+
+            const currentTime = await time.latest()
+            console.log({currentTime: new Date(currentTime)})
+            await expect(concertPlanner.connect(user).meetGreetArtist(12)).to.be.reverted
+        })
+    })
+
 })
