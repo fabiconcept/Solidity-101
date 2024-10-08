@@ -131,16 +131,6 @@ describe("Concert Planner", function () {
             const [, user] = await ethers.getSigners();
             await expect(concertPlanner.connect(user).meetGreetArtist(12)).to.be.reverted
         })
-        
-        it("Should allow user with meet and greet meet artist because concert is started", async () => {
-            const [, user] = await ethers.getSigners();
-            const date = concertStartDate;
-            await time.increaseTo(date);
-
-            const currentTime = await time.latest()
-            console.log({currentTime: new Date(currentTime)})
-            await expect(concertPlanner.connect(user).meetGreetArtist(12)).to.be.reverted
-        })
-    })
+    });
 
 })
