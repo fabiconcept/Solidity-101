@@ -132,5 +132,10 @@ describe("Concert Planner", function () {
             await expect(concertPlanner.connect(user).meetGreetArtist(12)).to.be.reverted
         })
     });
-
+    describe("Get text information", function() {
+        it("Should return the artist name", async function () {
+            const artistName = await concertPlanner.getArtistName(1);
+            expect(artistName).to.be.equal("test artist");
+        });
+    });
 })
