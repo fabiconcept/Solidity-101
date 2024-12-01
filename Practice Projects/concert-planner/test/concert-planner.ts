@@ -132,10 +132,21 @@ describe("Concert Planner", function () {
             await expect(concertPlanner.connect(user).meetGreetArtist(12)).to.be.reverted
         })
     });
+
     describe("Get text information", function() {
         it("Should return the artist name", async function () {
             const artistName = await concertPlanner.getArtistName(1);
             expect(artistName).to.be.equal("test artist");
         });
+        it("Should return the list of artist", async function () {
+            const artistList = await concertPlanner.seeAllArtist();
+            expect(artistList).to.be.deep.equal(["test artist"]);
+        });
+        it("Should return the list of visitors", async function () {
+            const visitorList = await concertPlanner.seeAllVisitors();
+            const visitorCount = await concertPlanner.visitorCount();
+            console.log(visitorList, visitorCount);
+            expect(visitorList).to.be.deep.equal(["test user with mG"]);
+        });
     });
-})
+});

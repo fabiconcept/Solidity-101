@@ -223,7 +223,11 @@ contract ConcertPlanner {
     function seeAllVisitors() public view returns (string[] memory) {
         string[] memory outputList = new string[](visitorIds.length);
         for (uint256 i = 0; i < visitorIds.length; i++) {
-            outputList[i] = visitors[visitorIds[i]].name;
+            if(bytes(visitors[visitorIds[i]].name).length > 0) {
+                outputList[i] = visitors[visitorIds[i]].name;
+            } else {
+                outputList[i] = "Visitor not found";
+            }
         }
         return outputList;
     }
