@@ -14,6 +14,13 @@ contract VotingContact {
         address admin;
         uint pollOptionsCount;
     }
+
+    struct PollInfo {
+        string title;
+        uint duration;
+        address admin;
+        uint pollOptionsCount;
+    }
     
     address public owner;
     mapping(uint16 => Poll) Polls;
@@ -95,5 +102,20 @@ contract VotingContact {
 
         getPollOption.count++;
         return getPollOption.name;
+    }
+
+    function getPollData(uint16 _pollId)
+        public
+        view
+        pollExist(_pollId)
+        returns (PollInfo memory)
+    {
+        Poll storage poll = Polls[_pollId];
+        return PollInfo(
+            poll.title,
+            poll.duration,
+            poll.admin,
+            poll.pollOptionsCount
+        );
     }
 }
