@@ -14,4 +14,10 @@ describe("Voting Contact", function () {
 
         return { owner, otherAccount, votingContact };
     });
+
+    describe("Deployment", function () {
+        it("Should set the correct owner", async function () {
+            expect(await votingContact.owner()).to.equal(owner.address);
+        });
+    })
 });
