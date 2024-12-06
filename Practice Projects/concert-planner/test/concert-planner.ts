@@ -143,10 +143,11 @@ describe("Concert Planner", function () {
             expect(artistList).to.be.deep.equal(["test artist"]);
         });
         it("Should return the list of visitors", async function () {
+            const [, user] = await ethers.getSigners();
+            await concertPlanner.connect(user).purchaseTicket("Ray Williams", 10);
+
             const visitorList = await concertPlanner.seeAllVisitors();
-            const visitorCount = await concertPlanner.visitorCount();
-            console.log(visitorList, visitorCount);
-            expect(visitorList).to.be.deep.equal(["test user with mG"]);
+            expect(visitorList).to.be.deep.equal(["test user","test user with mG", "Ray Williams"]);
         });
     });
 });
