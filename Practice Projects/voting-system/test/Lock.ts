@@ -33,6 +33,20 @@ describe("Voting Contact", function () {
             expect(totalPolls).to.equal(1);
         });
 
+        it("Should set the right poll details", async function () {
+            const pollId = 3;
+            const pollTitle = "2024 Elections";
+            const pollDuration = 5;
+
+            await votingContact.createNewPoll(pollId, pollTitle, pollDuration);
+            const pollDetails = await votingContact.getPollData(pollId);
+            const blockTimestamp = (await ethers.provider.getBlock("latest"))!.timestamp;
+            const fiveDaysInSeconds = 5 * 24 *  60 * 60;
+            const expectedConcertDate = blockTimestamp + fiveDaysInSeconds;
+
+            expect(pollDetails[1]).to.be.closeTo(expectedConcertDate, 5);
+        })
+
         it("Should not create a new poll with an existing poll id", async function () {
             const pollTitle = "Test Poll";
             const pollId = "1";
@@ -80,5 +94,5 @@ describe("Voting Contact", function () {
           
             await expect(votingContact.connect(otherAccount).createNewPoll(pollId, pollTitle, pollDuration)).to.be.reverted;
         });
-    })
+    });
 });
