@@ -128,12 +128,18 @@ contract ConcertPlanner {
 
         newVisitor.name = _name;
         newVisitor.sitNumber = _preferredSit;
+        visitorIds.push(_preferredSit);
     }
 
     function burnTicket(uint256 _sitNumber) public onlyAdmin onlyBeforeConcertStart onlyValidVistor(_sitNumber) {
         uint256[] memory _takenSits = takenSits;
         takenSits = removeItem(_takenSits, _sitNumber);
         visitorCount--;
+
+        // Remove from visitorIds
+        uint256[] memory _visitorIds = visitorIds;
+        visitorIds = removeItem(_visitorIds, _sitNumber);
+
         delete visitors[_sitNumber];
     }
 
