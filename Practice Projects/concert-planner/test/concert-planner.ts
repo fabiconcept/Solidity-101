@@ -1,6 +1,3 @@
-const {
-    time,
-  } = require("@nomicfoundation/hardhat-toolbox/network-helpers");
 import { expect } from "chai";
 import hre, { ethers } from "hardhat";
 import { ConcertPlanner } from "../typechain-types";
@@ -10,7 +7,7 @@ describe("Concert Planner", function () {
     let concertPlanner: ConcertPlanner;
     let owner: any;
     let otherAccount: any;
-    const concertStartDate = new Date().getTime() + (5 * 24 * 60 * 60 * 1000) + (60000);
+
     before(async () => {
         concertName = "Test Concert";
 
