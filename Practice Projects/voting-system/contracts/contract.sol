@@ -118,4 +118,10 @@ contract VotingContact {
         Poll storage poll = Polls[_pollId];
         return poll.pollOptionsCount;
     }
+
+    function getVotingDataFor(uint16 _pollId, uint _pollOptionId) public view pollExist(_pollId) returns (Option memory) {
+        Poll storage poll = Polls[_pollId];
+        Option storage option = poll.options[_pollOptionId];
+        return option;
+    }
 }
