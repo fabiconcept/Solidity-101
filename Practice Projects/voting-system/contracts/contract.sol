@@ -104,12 +104,7 @@ contract VotingContact {
         return getPollOption.name;
     }
 
-    function getPollData(uint16 _pollId)
-        public
-        view
-        pollExist(_pollId)
-        returns (PollInfo memory)
-    {
+    function getPollData(uint16 _pollId) public view pollExist(_pollId) returns (PollInfo memory) {
         Poll storage poll = Polls[_pollId];
         return PollInfo(
             poll.title,
@@ -117,5 +112,10 @@ contract VotingContact {
             poll.admin,
             poll.pollOptionsCount
         );
+    }
+
+    function getPollOptionsCount(uint16 _pollId) public view pollExist(_pollId) returns (uint) {
+        Poll storage poll = Polls[_pollId];
+        return poll.pollOptionsCount;
     }
 }
