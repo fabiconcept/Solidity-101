@@ -114,4 +114,32 @@ describe("Voting Contact", function () {
             expect(votingContact.connect(owner).deletePoll(pollId)).to.be.revertedWith("This poll does not exist!");
         });
     });
+    
+    describe("Add Poll Option", function () {
+        it("Should allow the owner to add a new poll option", async function () {
+            const pollId = 4;
+            const pollTitle = "TinubuuuuuUUU!";
+            const pollDuration = 5;
+
+            await votingContact.connect(owner).createNewPoll(pollId, pollTitle, pollDuration);
+            
+            const option = "Test Option";
+            await votingContact.connect(owner).addPollOption(option, pollId);
+            
+            const optionsCount = await votingContact.getPollOptionsCount(pollId);
+            expect(optionsCount).to.be.equals(1);
+        });
+
+        it("Should only allow admin to Add a Poll Option", function () { 
+            const pollId = 4;
+            expect(votingContact.connect(otherAccount).addPollOption("Test Option", pollId)).to.be.revertedWith("Only owner can call this function!")
+        });
+
+        it("Should not allow admin to add a poll option to a poll that does not exist", function () {
+            const pollId = 5;
+            const option = "Test Option";
+
+            expect(votingContact.connect(owner).addPollOption(option, pollId)).to.be.rejectedWith("On the admin of this poll can call this function!");
+        });
+    });
 });
