@@ -24,7 +24,7 @@ describe("Voting Contact", function () {
     describe("Poll Creation", function () {
         it("Should create a new poll", async function () {
             const pollTitle = "Test Poll";
-            const pollId = "1";
+            const pollId = 1;
             const pollDuration = 5;
 
             await votingContact.createNewPoll(pollId, pollTitle, pollDuration);
@@ -45,7 +45,7 @@ describe("Voting Contact", function () {
             const expectedConcertDate = blockTimestamp + fiveDaysInSeconds;
 
             expect(pollDetails[1]).to.be.closeTo(expectedConcertDate, 5);
-        })
+        });
 
         it("Should not create a new poll with an existing poll id", async function () {
             const pollTitle = "Test Poll";
@@ -93,6 +93,25 @@ describe("Voting Contact", function () {
             const pollDuration = 5;
           
             await expect(votingContact.connect(otherAccount).createNewPoll(pollId, pollTitle, pollDuration)).to.be.reverted;
+        });
+    });
+
+    describe("Poll Deletion", function () {
+        it("Should allow the owner to delete a poll", async function () {
+            const pollId = 3;
+            await votingContact.connect(owner).deletePoll(pollId);
+            const pollCount = await votingContact.total_polls();
+            expect(pollCount).to.be.equals(1);
+        });
+
+        it("Should not allow user that is not admin to delete a poll", function () {
+            const pollId = 1;
+            expect(votingContact.connect(otherAccount).deletePoll(pollId)).to.be.revertedWith("Only owner can call this function!");
+        });
+        
+        it("Should not allow admin user to delete a poll that does not exist", function () {
+            const pollId = 4;
+            expect(votingContact.connect(owner).deletePoll(pollId)).to.be.revertedWith("This poll does not exist!");
         });
     });
 });
