@@ -171,4 +171,35 @@ describe("Voting Contact", function () {
         });
     });
     
+    describe("Voting", function () { 
+        it("Should allow the owner to vote", async function () {
+            const pollId = 4;
+            const optionId = 0;
+
+            await votingContact.connect(owner).vote(pollId, optionId);
+            const votesCount = (await votingContact.getVotingDataFor(pollId, optionId))[1];
+            expect(votesCount).to.be.equals(1);
+        });
+        
+        it("Should allow the otherAccount to vote", async function () {
+            const pollId = 4;
+            const optionId = 0;
+
+            await votingContact.connect(otherAccount).vote(pollId, optionId);
+            const votesCount = (await votingContact.getVotingDataFor(pollId, optionId))[1];
+            expect(votesCount).to.be.equals(2);
+        });
+
+        it("Should not allow user to vote for a poll that does not exist", function () {
+            const pollId = 5;
+            const optionId = 0;
+            expect(votingContact.connect(owner).vote(pollId, optionId)).to.be.revertedWith("On the admin of this poll can call this function!");
+        });
+        
+        it("Should not allow user to vote for a poll option that does not exist", function () {
+            const pollId = 4;
+            const optionId = 3;
+            expect(votingContact.connect(owner).vote(pollId, optionId)).to.be.revertedWith("This option does not exist!");
+        });
+    });
 });
