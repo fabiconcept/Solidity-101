@@ -142,4 +142,33 @@ describe("Voting Contact", function () {
             expect(votingContact.connect(owner).addPollOption(option, pollId)).to.be.rejectedWith("On the admin of this poll can call this function!");
         });
     });
+
+    describe("Remove Poll Option", function () { 
+        it("Should allow the owner to remove a poll option", async function () {
+            const pollId = 4;
+            const option = 0;
+            
+            await votingContact.connect(owner).removePollOption(pollId, option);
+
+            const optionsCount = await votingContact.getPollOptionsCount(pollId);
+            expect(optionsCount).to.be.equals(0);
+        });
+
+        it("Should not allow admin to remove a poll option that does not exist", function () {
+            const pollId = 4;
+            const option = 1;
+            expect(votingContact.connect(owner).removePollOption(pollId, option)).to.be.revertedWith("This option does not exist!");
+        })
+
+        it("Should only allow admin to remove a poll option", async function () {
+            const pollId = 4;
+            const optionID = 0;
+
+            const option = "Test Option";
+            await votingContact.connect(owner).addPollOption(option, pollId);
+
+            expect(votingContact.connect(otherAccount).removePollOption(pollId, optionID)).to.be.revertedWith("Only owner can call this function!")
+        });
+    });
+    
 });
