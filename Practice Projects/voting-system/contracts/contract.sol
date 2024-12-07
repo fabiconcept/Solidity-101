@@ -100,6 +100,8 @@ contract VotingContact {
         Poll storage getPoll = Polls[_pollId];
         Option storage getPollOption = getPoll.options[_pollOptionId];
 
+        require(bytes(getPollOption.name).length != 0, "This option does not exist!");
+
         getPollOption.count++;
         return getPollOption.name;
     }
