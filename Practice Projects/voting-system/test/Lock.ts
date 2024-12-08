@@ -33,7 +33,7 @@ describe("Voting Contact", function () {
             expect(totalPolls).to.equal(1);
         });
 
-        it("Should set the right poll details", async function () {
+        it("Should set the right poll Election Duration", async function () {
             const pollId = 3;
             const pollTitle = "2024 Elections";
             const pollDuration = 5;
