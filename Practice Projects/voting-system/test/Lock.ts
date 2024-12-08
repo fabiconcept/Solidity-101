@@ -57,7 +57,18 @@ describe("Voting Contact", function () {
 
             expect(pollDetails[0]).to.be.equals(pollTitle);
         });
-        
+
+        it("Should set the right poll Owner", async function () {
+            const pollId = 8;
+            const pollTitle = "2024 Elections";
+            const pollDuration = 5;
+
+            await votingContact.createNewPoll(pollId, pollTitle, pollDuration);
+            const pollDetails = await votingContact.getPollData(pollId);
+
+            expect(pollDetails[2]).to.be.equals(owner);
+        });
+
         it("Should not create a new poll with an existing poll id", async function () {
             const pollTitle = "Test Poll";
             const pollId = "1";
