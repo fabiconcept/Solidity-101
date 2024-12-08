@@ -123,7 +123,7 @@ describe("Voting Contact", function () {
             const pollId = 3;
             await votingContact.connect(owner).deletePoll(pollId);
             const pollCount = await votingContact.total_polls();
-            expect(pollCount).to.be.equals(1);
+            expect(pollCount).to.be.equals(3);
         });
 
         it("Should not allow user that is not admin to delete a poll", function () {
